@@ -28,3 +28,12 @@ const promptUser = () => {
         },
     ])
 }
+
+const init = () => {
+    promptUser()
+    .then((answers) => writeFile('logo.svg', SHAPES(answers)))
+    .then(() => console.log('Generated logo.svg'))
+    .catch((err) => console.error(err));
+}
+
+init();

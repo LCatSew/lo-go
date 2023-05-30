@@ -1,11 +1,13 @@
 const inquirer = require('inquirer');
 
-const SHAPES = require('./lib/shapes.js');
+const shapes = require('./lib/shapes.js');
 const { writeFile } = require('fs').promises;
 
-console.log(SHAPES);
+console.log(shapes);
 
-const shapes = new SHAPES();
+const triangle = new Triangle(answers.charInput, answers.colorInput, answers.shapeSelect);
+const square = new Square(answers.charInput, answers.colorInput, answers.shapeSelect);
+const circle = new Circle(answers.charInput, answers.colorInput, answers.shapeSelect);
 
 const promptUser = () => {
     return inquirer.prompt([
@@ -13,6 +15,21 @@ const promptUser = () => {
             type: 'input',
             message: 'Please enter up to 3 characters',
             name: 'charInput',
+            validate: function(input) {
+                var done = this.async();
+                
+                setTimeout(function() {
+                    if (input.length > 3) {
+                        done('You cannot enter a value above 3');
+                    return;
+                    }
+                    if (input.length === 0) {
+                        done('You must enter a value');
+                    return;
+                    }
+                done(null, true);
+                })
+            },
         },
         {
             type: 'input',
@@ -30,7 +47,7 @@ const promptUser = () => {
 
 const init = () => {
     promptUser()
-    .then((answers) => writeFile('logo.svg', SHAPES(answers)))
+    .then((answers) => writeFile('logo.svg', shapes(answers)))
     .then(() => console.log('Generated logo.svg'))
     .catch((err) => console.error(err));
 }
